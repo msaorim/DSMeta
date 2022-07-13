@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.msaorim.dsmeta.entities.Sale;
 import com.msaorim.dsmeta.services.SaleService;
+import com.msaorim.dsmeta.services.SmsService;
 
 @RestController
 @RequestMapping(value = "/sales")
@@ -19,6 +20,9 @@ public class SaleResource {
 
 	@Autowired
 	private SaleService saleService;
+	
+	@Autowired
+	private SmsService smsService;
 
 	@GetMapping
 	public Page<Sale> findAll(@RequestParam(value = "minDate", defaultValue = "") String minDate,
@@ -34,5 +38,10 @@ public class SaleResource {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Sale> findById(@PathVariable long id) {
 		return ResponseEntity.ok().body(saleService.findById(id));
+	}
+	
+	@GetMapping(value = "/{id}/notify")
+	public void notifySms(@PathVariable long id) {
+		smsService.sendSms(id);
 	}
 }
